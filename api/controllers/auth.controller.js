@@ -25,6 +25,8 @@ export const signup = async (req, res, next) => {
     username,
     email,
     password: hashedPassword,
+    // profilePicture:
+    //   "https://tse2.mm.bing.net/th?id=OIP.Gfp0lwE6h7139625a-r3aAHaHa&pid=Api&P=0&h=180",
   });
 
   try {
