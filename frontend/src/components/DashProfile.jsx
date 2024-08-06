@@ -11,6 +11,7 @@ import {
   signoutUserSuccess,
 } from "../redux/user/userSlice";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 export default function DashProfile() {
   const [formData, setFormData] = useState({});
@@ -18,11 +19,11 @@ export default function DashProfile() {
   const [updateUserError, setUpdateUserError] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
-    dispatch(updateStart());
+    // dispatch(updateStart());
 
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
@@ -30,7 +31,7 @@ export default function DashProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    dispatch(updateStart());
+    // dispatch(updateStart());
     setUpdateUserError(null);
     setUpdateUserSuccess(null);
 
@@ -132,9 +133,26 @@ export default function DashProfile() {
           placeholder="Password"
           onChange={handleChange}
         />
-        <Button type="submit" gradientDuoTone={"purpleToBlue"} outline>
-          Update
+        <Button
+          type="submit"
+          gradientDuoTone={"purpleToBlue"}
+          outline
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Update"}
         </Button>
+
+        {currentUser.isAdmin && (
+          <Link to={"/create-post"}>
+            <Button
+              type="button"
+              gradientDuoTone={"purpleToPink"}
+              className="w-full"
+            >
+              Create a post
+            </Button>
+          </Link>
+        )}
       </form>
 
       <div className="text-red-500 flex justify-between mt-5">
