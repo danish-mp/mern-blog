@@ -80,7 +80,7 @@ export default function DashProfile() {
       if (!res.ok) {
         dispatch(deleteUserFailure(data.message));
       } else {
-        dispatch(deleteUserSuccess(data));
+        dispatch(deleteUserSuccess());
       }
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
