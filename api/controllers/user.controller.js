@@ -63,7 +63,7 @@ export const updateUser = async (req, res, next) => {
 
 // DELETE
 export const deleteUser = async (req, res, next) => {
-  if (!req.user.isAdmin && req.user.id !== req.params.userId) {
+  if (req.user.id !== req.params.userId) {
     return next(
       errorHandler(403, "You are not allowed to delete this account")
     );
@@ -131,5 +131,27 @@ export const getUsers = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+// DELETE-ADMIN
+export const deleteAdmin = async (req, res, next) => {
+  const isAdmin = await User.findById(req.params.userId);
+
+  if (
+    !req.user.isAdmin ||
+    req.user.id === req.params.userId ||
+    isAdmin.isAdmin
+  ) {
+    return next(
+      errorHandler(403, "You are not allowed to delete this account")
+    );
+  }
+
+  try {
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json("User has been deleted");
+  } catch (error) {
+    console.log(error.message);
   }
 };

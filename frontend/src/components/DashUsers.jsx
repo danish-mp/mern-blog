@@ -1,4 +1,4 @@
-import { Modal, Table, Button } from "flowbite-react";
+import { Modal, Table, Button, Alert } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
@@ -9,6 +9,7 @@ export default function DashUsers() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState("");
+  const [alertMessage, setAlertMessage] = useState(null);
 
   const { currentUser } = useSelector((state) => state.user);
 
@@ -56,7 +57,7 @@ export default function DashUsers() {
 
   const handleDeleteUser = async () => {
     try {
-      const res = await fetch(`/api/user/delete/${userIdToDelete}`, {
+      const res = await fetch(`/api/user/deleteadmin/${userIdToDelete}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -66,9 +67,15 @@ export default function DashUsers() {
         setShowModal(false);
       } else {
         console.log(data.message);
+
+        setShowModal(false);
+        setAlertMessage(data.message);
       }
     } catch (error) {
       console.log(error.message);
+
+      setShowModal(false);
+      setAlertMessage(error.message);
     }
   };
 
@@ -140,6 +147,12 @@ export default function DashUsers() {
         </>
       ) : (
         <p>You have no users yet!</p>
+      )}
+
+      {alertMessage && (
+        <Alert color={"failure"} className="mt-4">
+          {alertMessage}
+        </Alert>
       )}
 
       <Modal
