@@ -24,7 +24,6 @@ export default function DashProfile() {
 
   const handleChange = (e) => {
     // dispatch(updateStart());
-
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
@@ -35,11 +34,14 @@ export default function DashProfile() {
     setUpdateUserError(null);
     setUpdateUserSuccess(null);
 
+    setTimeout(() => {
+      dispatch(updateFailure());
+    }, 8000);
+
     if (Object.keys(formData).length === 0) {
       setUpdateUserError("No changes made");
       return;
     }
-
     try {
       dispatch(updateStart());
 
@@ -50,7 +52,6 @@ export default function DashProfile() {
         },
         body: JSON.stringify(formData),
       });
-
       const data = await res.json();
 
       if (!res.ok) {
@@ -69,6 +70,14 @@ export default function DashProfile() {
   const handleDeleteUser = async () => {
     setShowModal(false);
 
+    setTimeout(() => {
+      dispatch(deleteUserFailure());
+    }, 7000);
+
+    if (currentUser.isAdmin) {
+      dispatch(deleteUserFailure("Sorry, cannot delete the admin account"));
+      return;
+    }
     try {
       dispatch(deleteUserStart());
 

@@ -37,7 +37,6 @@ function SignUp() {
       if (res.ok) {
         navigate("/sign-in");
       }
-
       if (data.success === false) {
         return setErrorMessage(data.message);
       }
@@ -61,7 +60,7 @@ function SignUp() {
 
           <p className="text-sm mt-5">
             This is a demo project. You can Sign up with your email, username
-            and password or with Google.
+            and password.
           </p>
         </div>
 
@@ -77,6 +76,7 @@ function SignUp() {
                 onChange={handleChange}
               />
             </div>
+
             <div>
               <Label value="Your Email" />
               <TextInput
@@ -86,6 +86,7 @@ function SignUp() {
                 onChange={handleChange}
               />
             </div>
+
             <div>
               <Label value="Password" />
               <TextInput
@@ -95,6 +96,7 @@ function SignUp() {
                 onChange={handleChange}
               />
             </div>
+
             <Button
               gradientDuoTone={"purpleToPink"}
               type="submit"

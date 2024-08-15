@@ -102,9 +102,9 @@ function Header() {
               <Dropdown.Item onClick={handleSignout}>Sign out</Dropdown.Item>
             </Dropdown>
           ) : (
-            <Link to={"/sign-up"}>
+            <Link to={"/sign-in"}>
               <Button gradientDuoTone={"purpleToBlue"} outline>
-                Sign Up
+                Sign In
               </Button>
             </Link>
           )}

@@ -13,9 +13,16 @@ export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.userId) {
     return next(errorHandler(403, "You are not allowed to update this user"));
   }
-
   // Password
   if (req.body.password) {
+    if (req.user.id === "66bc7ede96dbce29e7c45b87") {
+      return next(
+        errorHandler(
+          403,
+          "This is a public account and you cannot change the password"
+        )
+      );
+    }
     if (req.body.password.length < 6) {
       return next(errorHandler(400, "Password must be atleast 6 characters"));
     }
@@ -47,10 +54,12 @@ export const updateUser = async (req, res, next) => {
       req.params.userId,
       {
         $set: {
-          username: req.body.username,
-          email: req.body.email,
-          profilePicture: req.body.profilePicture,
-          password: req.body.password,
+          ...(req.body.username && { username: req.body.username }),
+          ...(req.body.email && { email: req.body.email }),
+          ...(req.body.profilePicture && {
+            profilePicture: req.body.profilePicture,
+          }),
+          ...(req.body.password && { password: req.body.password }),
         },
       },
       { new: true }
@@ -111,7 +120,6 @@ export const getUsers = async (req, res, next) => {
     });
 
     const totalUsers = await User.countDocuments();
-
     const now = new Date();
 
     const oneMonthAgo = new Date(
@@ -160,10 +168,10 @@ export const deleteAdmin = async (req, res, next) => {
 export const getUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.userId);
-
     if (!user) {
       return next(errorHandler(404, "User not found"));
     }
+
     const { password, ...rest } = user._doc;
     res.status(200).json(rest);
   } catch (error) {

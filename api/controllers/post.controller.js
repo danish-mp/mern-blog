@@ -54,7 +54,6 @@ export const getPosts = async (req, res, next) => {
       .limit(limit);
 
     const totalPosts = await Post.countDocuments();
-
     const now = new Date();
 
     const oneMonthAgo = new Date(
@@ -107,11 +106,11 @@ export const updatepost = async (req, res, next) => {
       req.params.postId,
       {
         $set: {
-          title: req.body.title,
-          content: req.body.content,
-          category: req.body.category,
-          image: req.body.image,
-          slug,
+          ...(req.body.title && { title: req.body.title }),
+          ...(req.body.content && { content: req.body.content }),
+          ...(req.body.category && { category: req.body.category }),
+          ...(req.body.image && { image: req.body.image }),
+          ...(slug && slug),
         },
       },
       { new: true }

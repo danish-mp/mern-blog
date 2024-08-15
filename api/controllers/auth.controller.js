@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 // Sign Up
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
-
   if (
     !username ||
     !email ||
@@ -29,7 +28,6 @@ export const signup = async (req, res, next) => {
 
   try {
     const validUser = await User.findOne({ email });
-
     if (validUser) {
       next(errorHandler(500, "Email or Username already exist"));
     }
@@ -52,32 +50,44 @@ export const signin = async (req, res, next) => {
 
   try {
     const validUser = await User.findOne({ email });
-
     if (!validUser) {
       return next(errorHandler(404, "User not found"));
     }
 
     const validPassword = bcryptjs.compareSync(password, validUser.password);
-
     if (!validPassword) {
       return next(errorHandler(400, "Invalid Password"));
     }
 
     const token = jwt.sign(
       { id: validUser._id, isAdmin: validUser.isAdmin },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
     const { password: pass, ...rest } = validUser._doc;
-    const expiryDate = new Date(Date.now() + 3600000); // 1 Hour
-
     res
       .status(200)
       .cookie("access_token", token, {
         httpOnly: true,
-        expires: expiryDate,
       })
       .json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET-ADMIN
+export const getAdmin = async (req, res, next) => {
+  try {
+    const admin = await User.findById(req.params.adminId);
+    if (!admin) {
+      return next(errorHandler(404, "User not found"));
+    }
+
+    const { password: pass, ...rest } = admin._doc;
+
+    res.status(200).json(rest);
   } catch (error) {
     next(error);
   }
