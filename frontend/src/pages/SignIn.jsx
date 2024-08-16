@@ -69,7 +69,9 @@ function SignIn() {
   useEffect(() => {
     const getAdminFunc = async () => {
       try {
-        const res = await fetch("/api/auth/getadmin/66bc7ede96dbce29e7c45b87");
+        const res = await fetch(
+          `/api/auth/getadmin/${import.meta.env.VITE_ADMIN_ID}`
+        );
         const data = await res.json();
 
         if (res.ok) {
@@ -89,7 +91,7 @@ function SignIn() {
     setFormData({
       ...formData,
       email: inputAdmin,
-      password: "888314admin#$",
+      password: import.meta.env.VITE_PASS,
     });
   };
 
