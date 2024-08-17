@@ -1,15 +1,21 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import PostCard from "../components/PostCard";
+import CardSkeleton from "../components/CardSkeleton";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+  const [skeleton, setSkeleton] = useState(true);
+  const [num, setNum] = useState(["1", "2", "3"]);
 
   useEffect(() => {
     const fetchPosts = async () => {
       const res = await fetch("/api/post/getPosts");
       const data = await res.json();
 
+      if (data.totalPosts > 0 || !res.ok || data.posts.length < 1) {
+        setSkeleton(false);
+      }
       setPosts(data.posts);
     };
 
@@ -55,6 +61,18 @@ export default function Home() {
             </Link>
           </div>
         )}
+      </div>
+
+      <div className="max-w-6xl mx-auto p-3 py-7 flex justify-evenly">
+        {skeleton ? (
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-wrap gap-4">
+              {num.map((item, index) => (
+                <CardSkeleton key={index} />
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );
