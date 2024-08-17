@@ -66,7 +66,7 @@ export default function Home() {
       <div className="max-w-6xl mx-auto p-3 py-7 flex justify-evenly">
         {skeleton ? (
           <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 ml-8">
               {num.map((item, index) => (
                 <CardSkeleton key={index} />
               ))}
